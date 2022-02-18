@@ -1,5 +1,6 @@
 package org.chetan.topscoreranking.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.ZonedDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class ScoreBean {
 	@NotNull(message = "Time cannot be null")
 	private ZonedDateTime time;
 
+	@JsonIgnore
 	public ScoreEntity toEntity() {
 		return ScoreEntity.builder()
 				//id will be created automatically

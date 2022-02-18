@@ -21,9 +21,9 @@ class ScoreBeanTest {
 				.time(now)
 				.build();
 		ScoreEntity actualEntity = scoreBean.toEntity();
-		org.assertj.core.api.Assertions.assertThat(expectedEntity)
+		org.assertj.core.api.Assertions.assertThat(actualEntity)
 				.usingRecursiveComparison()
-				.isEqualTo(actualEntity);
+				.isEqualTo(expectedEntity);
 	}
 
 }

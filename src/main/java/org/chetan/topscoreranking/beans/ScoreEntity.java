@@ -1,5 +1,6 @@
 package org.chetan.topscoreranking.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.ZonedDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,10 +34,19 @@ public class ScoreEntity {
 	@Column(name = "TSZ_TIME", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private ZonedDateTime time;
 
+	@JsonIgnore
 	public ScoreBean toScoreBean() {
 		return ScoreBean.builder()
 				.id(id)
 				.player(playerName)
+				.score(score)
+				.time(time)
+				.build();
+	}
+
+	@JsonIgnore
+	public PlayerScoreHistory.ScoreData toPlayerHistoryScoreData() {
+		return PlayerScoreHistory.ScoreData.builder()
 				.score(score)
 				.time(time)
 				.build();

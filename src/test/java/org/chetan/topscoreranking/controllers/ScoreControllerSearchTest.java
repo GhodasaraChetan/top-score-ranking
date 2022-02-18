@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.chetan.topscoreranking.beans.ScoreBean;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,9 +21,10 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ScoreControllerSearchTest {
 	//Integration test
 
@@ -35,22 +34,8 @@ class ScoreControllerSearchTest {
 	@LocalServerPort
 	private int port = 8080;
 
-	private static ZonedDateTime baseZdt;
-
-	//Search Scores
-
-	@BeforeAll
-	void setup() {
-		System.out.println("before all");
-		baseZdt = ZonedDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.of("+09:00"));
-		String url = "http://localhost:" + port + "/scores";
-		IntStream.range(1, 10).forEach(i -> {
-			ScoreBean inputScoreBean = getScoreBean(i * 10, baseZdt.plusDays(i));
-			restTemplate.postForEntity(url, inputScoreBean, ScoreBean.class);
-		});
-	}
-
 	static Stream<Arguments> parameters() {
+		ZonedDateTime baseZdt = ZonedDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.of("+09:00"));
 		return Stream.of(
 				Arguments.of(null, null, null, null, null, Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L)),
 				Arguments.of(Arrays.asList(), null, null, null, null, Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L)),
@@ -75,9 +60,20 @@ class ScoreControllerSearchTest {
 		);
 	}
 
+	void initializeDb() {
+		ZonedDateTime baseZdt = ZonedDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.of("+09:00"));
+		String url = "http://localhost:" + port + "/scores";
+		IntStream.range(1, 10).forEach(i -> {
+			ScoreBean inputScoreBean = getScoreBean(i * 10, baseZdt.plusDays(i));
+			restTemplate.postForEntity(url, inputScoreBean, ScoreBean.class);
+		});
+	}
+
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void test_searchScore(List<String> players, ZonedDateTime beforeZdt, ZonedDateTime afterZdt, Integer offset, Integer size, List<Long> expectedIds) {
+
+		initializeDb(); //Todo: Make it common
 
 		String url = "http://localhost:{port}/scores?players={players}&beforeZdt={beforeZdt}&afterZdt={afterZdt}&offset={offset}&size={size}";
 		ResponseEntity<List<ScoreBean>> actualScoresEntity =

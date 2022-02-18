@@ -1,10 +1,9 @@
 package org.chetan.topscoreranking.repositories;
 
-import org.springframework.data.domain.Pageable;
 import java.time.ZonedDateTime;
 import java.util.List;
 import org.chetan.topscoreranking.beans.ScoreEntity;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface ScoreRepository extends PagingAndSortingRepository<ScoreEntity, Long> {
@@ -24,4 +23,7 @@ public interface ScoreRepository extends PagingAndSortingRepository<ScoreEntity,
 	List<ScoreEntity> findAllByPlayerNameInAndTimeBefore(List<String> playerNames, ZonedDateTime timeBefore, Pageable pageable);
 
 	List<ScoreEntity> findAllByPlayerNameInAndTimeAfterAndTimeBefore(List<String> playerNames, ZonedDateTime timeAfter, ZonedDateTime timeBefore, Pageable pageable);
+
+	//FindByPlayerName
+	List<ScoreEntity> findAllByPlayerName(String playerName);
 }
