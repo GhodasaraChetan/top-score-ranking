@@ -25,7 +25,7 @@ class ScoreRepositoryTest {
 	public void should_create_new_score() {
 		ScoreEntity scoreEntity = getScoreEntity();
 		scoreRepository.save(scoreEntity);
-		List<ScoreEntity> allScores = scoreRepository.findAll();
+		List<ScoreEntity> allScores = (List<ScoreEntity>) scoreRepository.findAll();
 		assertThat(allScores.size()).isEqualTo(1);
 		assertThat(allScores).extracting(ScoreEntity::getPlayerName).containsOnly("testOne");
 	}
@@ -36,7 +36,7 @@ class ScoreRepositoryTest {
 				.mapToObj(x -> getScoreEntity())
 				.collect(Collectors.toList());
 		scoreRepository.saveAll(scoreList);
-		List<ScoreEntity> allScores = scoreRepository.findAll();
+		List<ScoreEntity> allScores = (List<ScoreEntity>) scoreRepository.findAll();
 		assertThat(allScores.size()).isEqualTo(3);
 		assertThat(allScores).extracting(ScoreEntity::getPlayerName).containsOnly("testOne");
 		assertThat(allScores).extracting(ScoreEntity::getScore).containsOnly(10);
@@ -63,12 +63,12 @@ class ScoreRepositoryTest {
 	public void should_delete_by_id() {
 		ScoreEntity scoreEntity = getScoreEntity();
 		ScoreEntity savedScore = scoreRepository.save(scoreEntity);
-		List<ScoreEntity> allScoresAfterSave = scoreRepository.findAll();
+		List<ScoreEntity> allScoresAfterSave = (List<ScoreEntity>) scoreRepository.findAll();
 		assertThat(allScoresAfterSave.size()).isEqualTo(1);
 		assertThat(allScoresAfterSave).extracting(ScoreEntity::getId).containsOnly(savedScore.getId());
 
 		scoreRepository.deleteById(savedScore.getId());
-		List<ScoreEntity> allScoresAfterDelete = scoreRepository.findAll();
+		List<ScoreEntity> allScoresAfterDelete = (List<ScoreEntity>) scoreRepository.findAll();
 		assertThat(allScoresAfterDelete.size()).isEqualTo(0);
 	}
 

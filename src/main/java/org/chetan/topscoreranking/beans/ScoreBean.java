@@ -4,18 +4,15 @@ import java.time.ZonedDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter(AccessLevel.PRIVATE)
 public class ScoreBean {
 	private long id;
 	@NotBlank(message = "Player Name cannot be blank")

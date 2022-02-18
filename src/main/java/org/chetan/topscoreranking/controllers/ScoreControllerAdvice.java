@@ -56,5 +56,4 @@ public class ScoreControllerAdvice {
 		return er;
 	}
 
-	//Todo: add validation exception
 }
